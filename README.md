@@ -2,7 +2,7 @@
 
 An AI-first [moldable development](https://moldabledevelopment.com/) environment.
 
-# Guiding Principles
+## Guiding Principles
 
 1. Tools Should Mold to Problems, Not Problems to Tools
 
