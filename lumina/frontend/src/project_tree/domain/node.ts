@@ -1,5 +1,5 @@
 export interface Node {
   name: string;
-  type: 'directory' | 'file';
+  type: string;
   children: Node[];
 }
