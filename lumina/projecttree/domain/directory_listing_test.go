@@ -8,11 +8,11 @@ import (
 
 // Mock implementation for testing
 type MockDirectoryLister struct {
-	files []projecttree.FileInfo
+	files []domain.FileInfo
 	err   error
 }
 
-func (m *MockDirectoryLister) ListDirectory(path string) ([]projecttree.FileInfo, error) {
+func (m *MockDirectoryLister) ListDirectory(path string) ([]domain.FileInfo, error) {
 	return m.files, m.err
 }
 
@@ -21,12 +21,12 @@ func (m *MockDirectoryLister) ListDirectory(path string) ([]projecttree.FileInfo
 func TestListDirectoryUseCase_EmptyDirectory(t *testing.T) {
 	// Given an empty directory
 	mock := &MockDirectoryLister{
-		files: []projecttree.FileInfo{},
+		files: []domain.FileInfo{},
 		err:   nil,
 	}
 
 	// When listing the directory
-	result, err := projecttree.ListDirectoryUseCase(mock, "/empty")
+	result, err := domain.ListDirectoryUseCase(mock, "/empty")
 
 	// Then it should return a directory node with no children
 	assert.NoError(t, err)
@@ -38,7 +38,7 @@ func TestListDirectoryUseCase_EmptyDirectory(t *testing.T) {
 func TestListDirectoryUseCase_DirectoryWithFiles(t *testing.T) {
 	// Given a directory with two files
 	mock := &MockDirectoryLister{
-		files: []projecttree.FileInfo{
+		files: []domain.FileInfo{
 			{Path: "/project/README.md", IsDir: false, Children: nil},
 			{Path: "/project/main.go", IsDir: false, Children: nil},
 		},
@@ -46,7 +46,7 @@ func TestListDirectoryUseCase_DirectoryWithFiles(t *testing.T) {
 	}
 
 	// When listing the directory
-	result, err := projecttree.ListDirectoryUseCase(mock, "/project")
+	result, err := domain.ListDirectoryUseCase(mock, "/project")
 
 	// Then it should return a directory node with two file children
 	assert.NoError(t, err)
@@ -66,11 +66,11 @@ func TestListDirectoryUseCase_DirectoryWithFiles(t *testing.T) {
 func TestListDirectoryUseCase_NestedDirectories(t *testing.T) {
 	// Given a directory with subdirectories and files
 	mock := &MockDirectoryLister{
-		files: []projecttree.FileInfo{
+		files: []domain.FileInfo{
 			{
 				Path:  "/project/src",
 				IsDir: true,
-				Children: []projecttree.FileInfo{
+				Children: []domain.FileInfo{
 					{Path: "/project/src/app.go", IsDir: false, Children: nil},
 					{Path: "/project/src/utils.go", IsDir: false, Children: nil},
 				},
@@ -81,7 +81,7 @@ func TestListDirectoryUseCase_NestedDirectories(t *testing.T) {
 	}
 
 	// When listing the directory
-	result, err := projecttree.ListDirectoryUseCase(mock, "/project")
+	result, err := domain.ListDirectoryUseCase(mock, "/project")
 
 	// Then it should return a properly nested structure
 	assert.NoError(t, err)
@@ -109,19 +109,19 @@ func TestListDirectoryUseCase_NestedDirectories(t *testing.T) {
 func TestListDirectoryUseCase_DeepNesting(t *testing.T) {
 	// Given a deeply nested directory structure
 	mock := &MockDirectoryLister{
-		files: []projecttree.FileInfo{
+		files: []domain.FileInfo{
 			{
 				Path:  "/project/a",
 				IsDir: true,
-				Children: []projecttree.FileInfo{
+				Children: []domain.FileInfo{
 					{
 						Path:  "/project/a/b",
 						IsDir: true,
-						Children: []projecttree.FileInfo{
+						Children: []domain.FileInfo{
 							{
 								Path:  "/project/a/b/c",
 								IsDir: true,
-								Children: []projecttree.FileInfo{
+								Children: []domain.FileInfo{
 									{Path: "/project/a/b/c/deep.txt", IsDir: false, Children: nil},
 								},
 							},
@@ -134,7 +134,7 @@ func TestListDirectoryUseCase_DeepNesting(t *testing.T) {
 	}
 
 	// When listing the directory
-	result, err := projecttree.ListDirectoryUseCase(mock, "/project")
+	result, err := domain.ListDirectoryUseCase(mock, "/project")
 
 	// Then it should preserve the deep nesting
 	assert.NoError(t, err)
@@ -167,11 +167,11 @@ func TestListDirectoryUseCase_ListerError(t *testing.T) {
 	}
 
 	// When listing the directory
-	result, err := projecttree.ListDirectoryUseCase(mock, "/project")
+	result, err := domain.ListDirectoryUseCase(mock, "/project")
 
 	// Then it should propagate the error
 	assert.Error(t, err)
-	assert.Equal(t, projecttree.Node{}, result)
+	assert.Equal(t, domain.Node{}, result)
 }
 
 func TestListDirectoryUseCase_ExtractsNameFromPath(t *testing.T) {
@@ -189,11 +189,11 @@ func TestListDirectoryUseCase_ExtractsNameFromPath(t *testing.T) {
 
 	for _, tc := range testCases {
 		mock := &MockDirectoryLister{
-			files: []projecttree.FileInfo{},
+			files: []domain.FileInfo{},
 			err:   nil,
 		}
 
-		result, err := projecttree.ListDirectoryUseCase(mock, tc.path)
+		result, err := domain.ListDirectoryUseCase(mock, tc.path)
 
 		assert.NoError(t, err)
 		assert.Equal(t, tc.expectedName, result.Name, "Failed for path: %s", tc.path)

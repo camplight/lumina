@@ -1,12 +1,5 @@
 # README
 
-## About
-
-This is the official Wails Lit-TS template.
-
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
-
 ## Live Development
 
 To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
@@ -17,3 +10,15 @@ to this in your browser, and you can call your Go code from devtools.
 ## Building
 
 To build a redistributable, production mode package, use `wails build`.
+
+## Testing
+
+### Frontend
+
+Navigate to `/frontend`.
+
+Run `npm t`. This will start vitest in watch mode so you can receive instant test feedback while you develop.
+
+### Backend
+
+
