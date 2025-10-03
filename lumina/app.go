@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-    "lumina/projecttree/domain"
-    "lumina/projecttree/infrastructure"
+    "lumina/backend/projecttree/domain"
+    "lumina/backend/projecttree/infrastructure"
 )
 
 // App struct

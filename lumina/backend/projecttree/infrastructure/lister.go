@@ -3,7 +3,7 @@ package infrastructure
 import (
 	"os"
 	"path/filepath"
-	"lumina/projecttree/domain"
+	"lumina/backend/projecttree/domain"
 )
 
 // Lister implements the DirectoryLister port using the OS filesystem
