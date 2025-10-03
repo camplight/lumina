@@ -1,12 +1,13 @@
 import { LitElement, TemplateResult } from 'lit';
+import { ProjectTreeLister } from '../domain/project_tree_lister';
 import { Node } from '../domain/node';
 export declare class ProjectTree extends LitElement {
     static styles: import("lit").CSSResult;
+    lister: ProjectTreeLister;
     private tree;
     private loading;
     private error;
     private expanded;
-    private lister;
     connectedCallback(): void;
     loadTree(): Promise<void>;
     toggleNode(path: string): void;

@@ -1,10 +1,9 @@
 // frontend/src/components/project-tree.ts
 
 import {LitElement, html, css, TemplateResult} from 'lit';
-import { customElement, state } from 'lit/decorators.js';
-import { getProjectTreeUseCase } from '../domain/project_tree_lister';
+import {customElement, property, state} from 'lit/decorators.js';
+import {getProjectTreeUseCase, ProjectTreeLister} from '../domain/project_tree_lister';
 import { Node } from '../domain/node';
-import {WailsProjectTreeLister} from '../infrastructure/WailsProjectTreeLister';
 
 @customElement('project-tree')
 export class ProjectTree extends LitElement {
@@ -13,6 +12,9 @@ export class ProjectTree extends LitElement {
       display: block;
       font-family: system-ui, -apple-system, sans-serif;
       padding: 16px;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
     }
 
     .loading {
@@ -71,6 +73,10 @@ export class ProjectTree extends LitElement {
     }
   `;
 
+  // Injected dependency - the lister adapter
+  @property({ attribute: false })
+  lister!: ProjectTreeLister;
+
   @state()
   private tree: Node | null = null;
 
@@ -83,11 +89,15 @@ export class ProjectTree extends LitElement {
   @state()
   private expanded = new Set<string>();
 
-  // Create the lister inside the component
-  private lister = new WailsProjectTreeLister();
-
   connectedCallback() {
     super.connectedCallback();
+
+    if (!this.lister) {
+      this.error = 'No lister provided';
+      this.loading = false;
+      return;
+    }
+
     this.loadTree();
   }
 
@@ -96,7 +106,7 @@ export class ProjectTree extends LitElement {
       this.loading = true;
       this.error = null;
 
-      // Use the use case with the lister
+      // Use the injected use case
       this.tree = await getProjectTreeUseCase(this.lister);
 
       // Auto-expand root
@@ -105,6 +115,7 @@ export class ProjectTree extends LitElement {
       }
     } catch (err) {
       this.error = err instanceof Error ? err.message : 'Failed to load project tree';
+      console.error('Error loading project tree:', err);
     } finally {
       this.loading = false;
     }

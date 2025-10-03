@@ -1,2 +1,2 @@
 import './style.css';
-import './components/project-tree';
+import './project_tree/presentation/project-tree';
