@@ -21,4 +21,6 @@ Run `npm t`. This will start vitest in watch mode so you can receive instant tes
 
 ### Backend
 
+Navigate to `/backend`.
 
+Run `go test ./**`

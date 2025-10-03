@@ -3,7 +3,7 @@ package domain_test
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
-	"lumina/projecttree/domain"
+	"lumina/backend/projecttree/domain"
 )
 
 // Mock implementation for testing
