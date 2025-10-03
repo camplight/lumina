@@ -1,4 +1,4 @@
-package projecttree
+package domain
 
 import (
 	"path/filepath"

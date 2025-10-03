@@ -1,4 +1,4 @@
-package projecttree
+package domain
 
 type Node struct {
 	Name     string `json:"name"`

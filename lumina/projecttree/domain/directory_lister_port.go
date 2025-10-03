@@ -1,4 +1,4 @@
-package projecttree
+package domain
 
 type FileInfo struct {
 	Path     string

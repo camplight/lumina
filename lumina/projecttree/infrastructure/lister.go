@@ -1,7 +1,6 @@
-package filesystem
+package infrastructure
 
 import (
-	"io/fs"
 	"os"
 	"path/filepath"
 	"lumina/projecttree/domain"
@@ -16,17 +15,17 @@ func NewLister() *Lister {
 }
 
 // ListDirectory reads a directory from the filesystem and returns FileInfo entries
-func (l *Lister) ListDirectory(path string) ([]projecttree.FileInfo, error) {
+func (l *Lister) ListDirectory(path string) ([]domain.FileInfo, error) {
 	entries, err := os.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
 
-	var files []projecttree.FileInfo
+	var files []domain.FileInfo
 
 	for _, entry := range entries {
 		fullPath := filepath.Join(path, entry.Name())
-		fileInfo := projecttree.FileInfo{
+		fileInfo := domain.FileInfo{
 			Path:     fullPath,
 			IsDir:    entry.IsDir(),
 			Children: nil,
@@ -49,17 +48,17 @@ func (l *Lister) ListDirectory(path string) ([]projecttree.FileInfo, error) {
 }
 
 // ListDirectoryShallow reads only the immediate children (non-recursive)
-func (l *Lister) ListDirectoryShallow(path string) ([]projecttree.FileInfo, error) {
+func (l *Lister) ListDirectoryShallow(path string) ([]domain.FileInfo, error) {
 	entries, err := os.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
 
-	var files []projecttree.FileInfo
+	var files []domain.FileInfo
 
 	for _, entry := range entries {
 		fullPath := filepath.Join(path, entry.Name())
-		fileInfo := projecttree.FileInfo{
+		fileInfo := domain.FileInfo{
 			Path:     fullPath,
 			IsDir:    entry.IsDir(),
 			Children: nil,
