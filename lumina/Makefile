@@ -3,7 +3,7 @@
 # Run backend tests
 test:
 	@echo "Running backend tests..."
-	@go test ./backend/... -v
+	@gow test ./backend/... -v
 
 # Clean test artifacts
 clean:
