@@ -14,13 +14,15 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "test": "vitest"
   },
   "dependencies": {
     "lit": "^2.2.8"
   },
   "devDependencies": {
     "typescript": "^4.6.4",
-    "vite": "^3.0.7"
+    "vite": "^3.0.7",
+    "vitest": "^3.2.4"
   }
 }
