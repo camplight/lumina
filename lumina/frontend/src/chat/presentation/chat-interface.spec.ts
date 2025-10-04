@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { fixture, html } from '@open-wc/testing-helpers';
-import './chat';
-import { ChatInterface } from './chat';
+import './chat-interface';
+import { ChatInterface } from './chat-interface';
 import { ChatService } from '../domain/chat_service';
 import { ChatState } from '../domain/chat_state';
 

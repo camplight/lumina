@@ -1,5 +1,5 @@
 import './style.css';
-import './chat/presentation/chat';
+import './chat/presentation/chat-interface';
 import './project_tree/presentation/project_tree';
 import { Wails_project_tree_lister } from './project_tree/infrastructure/wails_project_tree_lister';
 import { Wails_chat_service } from './chat/infrastructure/wails_chat_service';
