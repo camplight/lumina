@@ -198,6 +198,9 @@ export class ChatInterface extends LitElement {
     this.loading = true;
     this.error = null;
 
+    this.chatState.messages.push({ role: 'user', content: messageCopy });
+    await this.updateComplete;
+
     try {
       this.chatState = await this.service.sendMessage(messageCopy);
 
