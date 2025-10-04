@@ -34,8 +34,10 @@ func TestSendChatMessage_Success(t *testing.T) {
 		err:      nil,
 	}
 
+    mockPersistence := &MockPersistenceService{}
+
 	// When sending a message
-	chat := domain.NewChat(mock, mockRepomix)
+	chat := domain.NewChat(mock, mockRepomix, mockPersistence)
 	result, err := chat.SendMessage("Hi there")
 
 	// Then it should return the response and update chat state
@@ -55,8 +57,10 @@ func TestSendChatMessage_ServiceError(t *testing.T) {
 		err:      errors.New("API error"),
 	}
 
+    mockPersistence := &MockPersistenceService{}
+
 	// When sending a message
-	chat := domain.NewChat(mock, mockRepomix)
+	chat := domain.NewChat(mock, mockRepomix, mockPersistence)
 	result, err := chat.SendMessage("Hi there")
 
 	// Then it should return the error and only store the user message
@@ -75,8 +79,10 @@ func TestSendChatMessage_EmptyMessage(t *testing.T) {
 		err:      nil,
 	}
 
+    mockPersistence := &MockPersistenceService{}
+
 	// When sending an empty message
-	chat := domain.NewChat(mock, mockRepomix)
+	chat := domain.NewChat(mock, mockRepomix, mockPersistence)
 	result, err := chat.SendMessage("")
 
 	// Then it should return an error without calling the service
@@ -93,8 +99,10 @@ func TestSendChatMessage_MultipleTurns(t *testing.T) {
 		err:      nil,
 	}
 
+    mockPersistence := &MockPersistenceService{}
+
 	// When sending multiple messages
-	chat := domain.NewChat(mock, mockRepomix)
+	chat := domain.NewChat(mock, mockRepomix, mockPersistence)
 
 	result1, err := chat.SendMessage("Message 1")
 	assert.NoError(t, err)
@@ -115,7 +123,8 @@ func TestSendChatMessage_MultipleTurns(t *testing.T) {
 func TestGetChatState_EmptyChat(t *testing.T) {
 	// Given a new chat
 	mock := &MockChatService{}
-	chat := domain.NewChat(mock, mockRepomix)
+    mockPersistence := &MockPersistenceService{}
+	chat := domain.NewChat(mock, mockRepomix, mockPersistence)
 
 	// When getting the chat state
 	state := chat.GetState()
@@ -131,7 +140,8 @@ func TestGetChatState_WithMessages(t *testing.T) {
 		response: "AI response",
 		err:      nil,
 	}
-	chat := domain.NewChat(mock, mockRepomix)
+    mockPersistence := &MockPersistenceService{}
+	chat := domain.NewChat(mock, mockRepomix, mockPersistence)
 	chat.SendMessage("User message")
 
 	// When getting the chat state

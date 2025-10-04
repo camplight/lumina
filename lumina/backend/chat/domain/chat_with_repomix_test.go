@@ -31,8 +31,10 @@ func TestSendChatMessage_WithRepomixContext(t *testing.T) {
 		err:      nil,
 	}
 
+    mockPersistence := &MockPersistenceService{}
+
 	// When sending a message with repomix enabled
-	chat := domain.NewChat(mockChat, mockRepomix)
+	chat := domain.NewChat(mockChat, mockRepomix, mockPersistence)
 	result, err := chat.SendMessage("What's in my codebase?")
 
 	// Then it should include the repomix output in the context
@@ -54,8 +56,10 @@ func TestSendChatMessage_RepomixError(t *testing.T) {
 		err:      nil,
 	}
 
+    mockPersistence := &MockPersistenceService{}
+
 	// When sending a message
-	chat := domain.NewChat(mockChat, mockRepomix)
+	chat := domain.NewChat(mockChat, mockRepomix, mockPersistence)
 	result, err := chat.SendMessage("Hello")
 
 	// Then it should return the repomix error
@@ -78,7 +82,9 @@ func TestSendChatMessage_RepomixGeneratedOnEachMessage(t *testing.T) {
 		err:      nil,
 	}
 
-	chat := domain.NewChat(mockChat, mockRepomix)
+    mockPersistence := &MockPersistenceService{}
+
+	chat := domain.NewChat(mockChat, mockRepomix, mockPersistence)
 
 	// When sending first message
 	chat.SendMessage("First")

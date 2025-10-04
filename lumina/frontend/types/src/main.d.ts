@@ -1,3 +1,3 @@
 import './style.css';
-import './chat/presentation/chat';
-import './project_tree/presentation/project-tree';
+import './chat/presentation/chat-interface';
+import './project_tree/presentation/project_tree';

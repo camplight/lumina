@@ -4,6 +4,7 @@ go 1.23.0
 
 require (
 	github.com/joho/godotenv v1.5.1
+	github.com/mattn/go-sqlite3 v1.14.32
 	github.com/mitranim/gow v0.0.0-20250926091427-aad163e590a8
 	github.com/stretchr/testify v1.11.1
 	github.com/wailsapp/wails/v2 v2.10.2

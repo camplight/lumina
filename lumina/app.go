@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
 
@@ -16,8 +17,9 @@ import (
 
 // App struct
 type App struct {
-	ctx  context.Context
-	chat *chatdomain.Chat
+	ctx         context.Context
+	chat        *chatdomain.Chat
+	persistence *chatinfra.SQLitePersistence
 }
 
 // NewApp creates a new App application struct
@@ -44,18 +46,54 @@ func NewApp() *App {
 	}
 	repomixService := chatinfra.NewRepomixService(workingDir)
 
-	// Create chat instance with repomix integration
-	chat := chatdomain.NewChat(openAIService, repomixService)
+	// Create SQLite persistence
+	// Store database in user's home directory or current directory
+	dbPath := getDBPath()
+	persistence, err := chatinfra.NewSQLitePersistence(dbPath)
+	if err != nil {
+		log.Printf("Warning: Could not initialize persistence: %v", err)
+		persistence = nil
+	} else {
+		log.Printf("Chat persistence initialized at: %s", dbPath)
+	}
+
+	// Create chat instance with repomix integration and persistence
+	chat := chatdomain.NewChat(openAIService, repomixService, persistence)
 
 	return &App{
-		chat: chat,
+		chat:        chat,
+		persistence: persistence,
 	}
+}
+
+// getDBPath returns the path for the SQLite database
+func getDBPath() string {
+	// Try to use a data directory in the user's home
+	homeDir, err := os.UserHomeDir()
+	if err == nil {
+		dataDir := filepath.Join(homeDir, ".lumina")
+		if err := os.MkdirAll(dataDir, 0755); err == nil {
+			return filepath.Join(dataDir, "chat.db")
+		}
+	}
+
+	// Fall back to current directory
+	return "chat.db"
 }
 
 // startup is called when the app starts. The context is saved
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+}
+
+// shutdown is called when the app is closing
+func (a *App) shutdown(ctx context.Context) {
+	if a.persistence != nil {
+		if err := a.persistence.Close(); err != nil {
+			log.Printf("Warning: Failed to close persistence: %v", err)
+		}
+	}
 }
 
 // Greet returns a greeting for the given name
