@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { fixture, html } from '@open-wc/testing-helpers';
-import './project-tree';
-import { ProjectTree } from './project-tree';
+import 'src/project_tree/presentation/project_tree';
+import { Project_tree } from 'src/project_tree/presentation/project_tree';
 import { ProjectTreeLister } from '../domain/project_tree_lister';
 import { Node } from '../domain/node';
 
@@ -44,7 +44,7 @@ describe('ProjectTree Integration Tests', () => {
 
   it('should display the proper header', async () => {
     const lister = new MockProjectTreeLister(mockTree);
-    const el = await fixture<ProjectTree>(html`
+    const el = await fixture<Project_tree>(html`
       <project-tree .lister=${lister}></project-tree>
     `);
 
@@ -55,7 +55,7 @@ describe('ProjectTree Integration Tests', () => {
 
   it('should list files in the root directory', async () => {
     const lister = new MockProjectTreeLister(mockTree);
-    const el = await fixture<ProjectTree>(html`
+    const el = await fixture<Project_tree>(html`
       <project-tree .lister=${lister}></project-tree>
     `);
 
@@ -70,7 +70,7 @@ describe('ProjectTree Integration Tests', () => {
 
   it('should list directories in the root directory', async () => {
     const lister = new MockProjectTreeLister(mockTree);
-    const el = await fixture<ProjectTree>(html`
+    const el = await fixture<Project_tree>(html`
       <project-tree .lister=${lister}></project-tree>
     `);
 
@@ -91,7 +91,7 @@ describe('ProjectTree Integration Tests', () => {
     };
 
     const lister = new MockProjectTreeLister(emptyTree);
-    const el = await fixture<ProjectTree>(html`
+    const el = await fixture<Project_tree>(html`
       <project-tree .lister=${lister}></project-tree>
     `);
 
@@ -109,7 +109,7 @@ describe('ProjectTree Integration Tests', () => {
 
   it('should expand directory and show children when clicked', async () => {
     const lister = new MockProjectTreeLister(mockTree);
-    const el = await fixture<ProjectTree>(html`
+    const el = await fixture<Project_tree>(html`
       <project-tree .lister=${lister}></project-tree>
     `);
 
@@ -140,7 +140,7 @@ describe('ProjectTree Integration Tests', () => {
 
   it('should collapse directory when clicked again', async () => {
     const lister = new MockProjectTreeLister(mockTree);
-    const el = await fixture<ProjectTree>(html`
+    const el = await fixture<Project_tree>(html`
       <project-tree .lister=${lister}></project-tree>
     `);
 
@@ -171,7 +171,7 @@ describe('ProjectTree Integration Tests', () => {
 
   it('should distinguish between files and directories with proper icons', async () => {
     const lister = new MockProjectTreeLister(mockTree);
-    const el = await fixture<ProjectTree>(html`
+    const el = await fixture<Project_tree>(html`
       <project-tree .lister=${lister}></project-tree>
     `);
 
@@ -199,7 +199,7 @@ describe('ProjectTree Integration Tests', () => {
       )
     };
 
-    const el = await fixture<ProjectTree>(html`
+    const el = await fixture<Project_tree>(html`
       <project-tree .lister=${errorLister}></project-tree>
     `);
 

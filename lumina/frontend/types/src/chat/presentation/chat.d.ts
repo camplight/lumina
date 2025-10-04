@@ -11,6 +11,7 @@ export declare class ChatInterface extends LitElement {
     private handleSendMessage;
     private handleKeyPress;
     private scrollToBottom;
+    private renderMarkdown;
     private renderMessage;
     render(): TemplateResult<1>;
 }
