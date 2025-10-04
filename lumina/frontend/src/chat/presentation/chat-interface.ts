@@ -63,7 +63,7 @@ export class ChatInterface extends LitElement {
       backdrop-filter: blur(10px);
     }
 
-    textarea {
+    input {
       flex: 1;
       padding: 14px 18px;
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -75,11 +75,11 @@ export class ChatInterface extends LitElement {
       transition: all 0.2s ease;
     }
 
-    textarea::placeholder {
+    input::placeholder {
       color: rgba(255, 255, 255, 0.4);
     }
 
-    textarea:focus {
+    input:focus {
       border-color: #667eea;
       background: rgba(255, 255, 255, 0.12);
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -245,7 +245,7 @@ export class ChatInterface extends LitElement {
       ${this.error ? html`<div class="error">${this.error}</div>` : ''}
 
       <div class="input-container">
-        <textarea
+        <input
           placeholder="Type your message..."
           .value=${this.inputValue}
           @input=${(e: Event) => this.inputValue = (e.target as HTMLInputElement).value}
