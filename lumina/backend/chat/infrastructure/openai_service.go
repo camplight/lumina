@@ -47,7 +47,7 @@ func (s *OpenAIService) SendMessage(message string) (string, error) {
 	}
 
 	reqBody := openAIRequest{
-		Model: "gpt-4o-mini",
+		Model: "gpt-4.1",
 		Messages: []openAIMessage{
 			{
 				Role:    "user",
