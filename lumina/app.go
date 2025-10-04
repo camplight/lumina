@@ -45,7 +45,7 @@ func NewApp() *App {
 	repomixService := chatinfra.NewRepomixService(workingDir)
 
 	// Create chat instance with repomix integration
-	chat := chatdomain.NewChatWithRepomix(openAIService, repomixService)
+	chat := chatdomain.NewChat(openAIService, repomixService)
 
 	return &App{
 		chat: chat,

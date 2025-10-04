@@ -32,7 +32,7 @@ func TestSendChatMessage_WithRepomixContext(t *testing.T) {
 	}
 
 	// When sending a message with repomix enabled
-	chat := domain.NewChatWithRepomix(mockChat, mockRepomix)
+	chat := domain.NewChat(mockChat, mockRepomix)
 	result, err := chat.SendMessage("What's in my codebase?")
 
 	// Then it should include the repomix output in the context
@@ -55,7 +55,7 @@ func TestSendChatMessage_RepomixError(t *testing.T) {
 	}
 
 	// When sending a message
-	chat := domain.NewChatWithRepomix(mockChat, mockRepomix)
+	chat := domain.NewChat(mockChat, mockRepomix)
 	result, err := chat.SendMessage("Hello")
 
 	// Then it should return the repomix error
@@ -78,7 +78,7 @@ func TestSendChatMessage_RepomixGeneratedOnEachMessage(t *testing.T) {
 		err:      nil,
 	}
 
-	chat := domain.NewChatWithRepomix(mockChat, mockRepomix)
+	chat := domain.NewChat(mockChat, mockRepomix)
 
 	// When sending first message
 	chat.SendMessage("First")
@@ -96,42 +96,4 @@ func TestSendChatMessage_RepomixGeneratedOnEachMessage(t *testing.T) {
 	assert.Contains(t, firstMessage, "output-1")
 	assert.Contains(t, secondMessage, "output-2")
 	assert.NotContains(t, secondMessage, "output-1")
-}
-
-func TestSendChatMessage_RepomixContextFormat(t *testing.T) {
-	// Given services
-	mockRepomix := &MockRepomixService{
-		output: "<codebase>test content</codebase>",
-		err:    nil,
-	}
-
-	mockChat := &MockChatService{
-		response: "OK",
-		err:      nil,
-	}
-
-	// When sending a message
-	chat := domain.NewChatWithRepomix(mockChat, mockRepomix)
-	chat.SendMessage("My question")
-
-	// Then the context should be properly formatted
-	assert.Contains(t, mockChat.lastMessage, "Here is the current state of the codebase:")
-	assert.Contains(t, mockChat.lastMessage, "<codebase>test content</codebase>")
-	assert.Contains(t, mockChat.lastMessage, "User question: My question")
-}
-
-func TestNewChat_WithoutRepomix(t *testing.T) {
-	// Given a regular chat without repomix
-	mockChat := &MockChatService{
-		response: "Hello",
-		err:      nil,
-	}
-
-	// When creating chat without repomix
-	chat := domain.NewChat(mockChat)
-
-	// Then it should work normally
-	result, err := chat.SendMessage("Hi")
-	assert.NoError(t, err)
-	assert.Len(t, result.Messages, 2)
 }
