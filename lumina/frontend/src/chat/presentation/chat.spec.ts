@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { fixture, html } from '@open-wc/testing-helpers';
 import './chat';
 import { ChatInterface } from './chat';
@@ -237,5 +237,139 @@ describe('ChatInterface Acceptance Tests', () => {
 
     // And the send button should be enabled again
     expect(sendButton.disabled).toBe(false);
+  });
+
+  it('should show empty state when no messages exist', async () => {
+    // Given a chat interface with no messages
+    mockService.setMockResponse({ messages: [] });
+
+    const el = await fixture<ChatInterface>(html`
+      <chat-interface .service=${mockService}></chat-interface>
+    `);
+
+    // Then it should show an empty state message
+    const emptyState = el.shadowRoot!.querySelector('.empty-state');
+    expect(emptyState).toBeTruthy();
+    expect(emptyState!.textContent).toContain('Start a conversation');
+  });
+
+  it('should hide empty state when messages exist', async () => {
+    // Given a chat interface with messages
+    mockService.setMockResponse({
+      messages: [
+        { role: 'user', content: 'Hello' },
+        { role: 'assistant', content: 'Hi there!' }
+      ]
+    });
+
+    const el = await fixture<ChatInterface>(html`
+      <chat-interface .service=${mockService}></chat-interface>
+    `);
+
+    await el.updateComplete;
+
+    // Then the empty state should not be visible
+    const emptyState = el.shadowRoot!.querySelector('.empty-state');
+    expect(emptyState).toBeFalsy();
+
+    // And messages should be displayed
+    const messages = el.shadowRoot!.querySelectorAll('.message');
+    expect(messages.length).toBe(2);
+  });
+
+  it('should send message when Enter key is pressed', async () => {
+    // Given a chat interface
+    const sendMessageSpy = vi.fn().mockResolvedValue({
+      messages: [
+        { role: 'user', content: 'Test via Enter' },
+        { role: 'assistant', content: 'Response' }
+      ]
+    });
+
+    const spyService: ChatService = {
+      sendMessage: sendMessageSpy,
+      getState: async () => ({ messages: [] })
+    };
+
+    const el = await fixture<ChatInterface>(html`
+      <chat-interface .service=${spyService}></chat-interface>
+    `);
+
+    const input = el.shadowRoot!.querySelector('input') as HTMLInputElement;
+
+    // When the user types and presses Enter
+    input.value = 'Test via Enter';
+    input.dispatchEvent(new Event('input'));
+    await el.updateComplete;
+
+    const enterEvent = new KeyboardEvent('keypress', {
+      key: 'Enter',
+      shiftKey: false,
+      bubbles: true,
+      cancelable: true
+    });
+    input.dispatchEvent(enterEvent);
+
+    await el.updateComplete;
+    await new Promise(resolve => setTimeout(resolve, 0));
+    await el.updateComplete;
+
+    // Then sendMessage should have been called
+    expect(sendMessageSpy).toHaveBeenCalledWith('Test via Enter');
+    expect(sendMessageSpy).toHaveBeenCalledTimes(1);
+
+    // And the event should have had preventDefault called
+    expect(enterEvent.defaultPrevented).toBe(true);
+  });
+
+  it('should not send message when Shift+Enter is pressed', async () => {
+    // Given a chat interface
+    const sendMessageSpy = vi.fn();
+
+    const spyService: ChatService = {
+      sendMessage: sendMessageSpy,
+      getState: async () => ({ messages: [] })
+    };
+
+    const el = await fixture<ChatInterface>(html`
+      <chat-interface .service=${spyService}></chat-interface>
+    `);
+
+    const input = el.shadowRoot!.querySelector('input') as HTMLInputElement;
+
+    // When the user types and presses Shift+Enter
+    input.value = 'Test';
+    input.dispatchEvent(new Event('input'));
+    await el.updateComplete;
+
+    const shiftEnterEvent = new KeyboardEvent('keypress', {
+      key: 'Enter',
+      shiftKey: true,
+      bubbles: true,
+      cancelable: true
+    });
+    input.dispatchEvent(shiftEnterEvent);
+
+    await el.updateComplete;
+
+    // Then sendMessage should NOT have been called
+    expect(sendMessageSpy).not.toHaveBeenCalled();
+
+    // And preventDefault should NOT have been called
+    expect(shiftEnterEvent.defaultPrevented).toBe(false);
+  });
+
+  it('should show error when service is not provided', async () => {
+    // Given a chat interface without a service
+    const el = await fixture<ChatInterface>(html`
+      <chat-interface></chat-interface>
+    `);
+
+    await el.updateComplete;
+
+    // Then an error should be displayed
+    const error = el.shadowRoot!.querySelector('.error');
+    expect(error).toBeTruthy();
+    expect(error!.textContent).toContain('No chat service provided');
   });
 });

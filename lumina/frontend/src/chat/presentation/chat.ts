@@ -143,7 +143,6 @@ export class ChatInterface extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
 
-    // No test for that
     if (!this.service) {
       this.error = 'No chat service provided';
       return;
@@ -151,7 +150,6 @@ export class ChatInterface extends LitElement {
 
     // Load initial state
     try {
-      // No test for that
       this.chatState = await this.service.getState();
     } catch (err) {
       console.error('Failed to load chat state:', err);
@@ -161,7 +159,6 @@ export class ChatInterface extends LitElement {
   private async handleSendMessage() {
     const message = this.inputValue.trim();
 
-    // No test here
     if (!message) {
       return;
     }
@@ -212,7 +209,6 @@ export class ChatInterface extends LitElement {
     return html`
       <div class="messages-container">
         ${this.chatState.messages.length === 0 && !this.loading
-      // No test here
       ? html`<div class="empty-state">Start a conversation...</div>`
       : this.chatState.messages.map(msg => this.renderMessage(msg))
     }
@@ -227,7 +223,6 @@ export class ChatInterface extends LitElement {
           placeholder="Type your message..."
           .value=${this.inputValue}
           @input=${(e: Event) => this.inputValue = (e.target as HTMLInputElement).value}
-          <!-- This test here -->
           @keypress=${this.handleKeyPress}
           ?disabled=${this.loading}
         />
