@@ -8,13 +8,15 @@ import (
 	"lumina/backend/chat/domain"
 )
 
-// Mock implementation for testing
+// Mock implementation for testing (shared with repomix tests)
 type MockChatService struct {
-	response string
-	err      error
+	response    string
+	err         error
+	lastMessage string
 }
 
 func (m *MockChatService) SendMessage(message string) (string, error) {
+	m.lastMessage = message
 	return m.response, m.err
 }
 

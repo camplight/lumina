@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-    "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 
 	chatdomain "lumina/backend/chat/domain"
 	chatinfra "lumina/backend/chat/infrastructure"
@@ -36,8 +36,16 @@ func NewApp() *App {
 	// Create OpenAI service
 	openAIService := chatinfra.NewOpenAIService(apiKey)
 
-	// Create chat instance
-	chat := chatdomain.NewChat(openAIService)
+	// Create repomix service (working directory is current directory)
+	workingDir, err := os.Getwd()
+	if err != nil {
+		log.Printf("Warning: Could not get working directory: %v", err)
+		workingDir = "."
+	}
+	repomixService := chatinfra.NewRepomixService(workingDir)
+
+	// Create chat instance with repomix integration
+	chat := chatdomain.NewChatWithRepomix(openAIService, repomixService)
 
 	return &App{
 		chat: chat,
