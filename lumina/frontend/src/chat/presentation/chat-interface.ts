@@ -1,14 +1,8 @@
-import { LitElement, html, css, TemplateResult } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { marked } from 'marked';
 import { ChatService } from '../domain/chat_service';
-import { ChatState, Message } from '../domain/chat_state';
-
-marked.setOptions({
-  breaks: true,
-  gfm: true,
-});
+import { ChatState } from '../domain/chat_state';
+import './chat-message';
 
 @customElement('chat-interface')
 export class ChatInterface extends LitElement {
@@ -49,18 +43,6 @@ export class ChatInterface extends LitElement {
       background: rgba(255, 255, 255, 0.15);
     }
 
-    .message {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 16px 20px;
-      border-radius: 12px;
-      max-width: 75%;
-      animation: slideIn 0.3s ease-out;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      text-align: left;
-    }
-
     @keyframes slideIn {
       from {
         opacity: 0;
@@ -70,109 +52,6 @@ export class ChatInterface extends LitElement {
         opacity: 1;
         transform: translateY(0);
       }
-    }
-
-    .message.user {
-      align-self: flex-end;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-
-    .message.assistant {
-      align-self: flex-start;
-      background: rgba(255, 255, 255, 0.08);
-      color: #e8eaed;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .role {
-      font-size: 11px;
-      font-weight: 600;
-      opacity: 0.7;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .content {
-      font-size: 15px;
-      line-height: 1.6;
-      word-wrap: break-word;
-    }
-
-    .content :is(h1, h2, h3, h4, h5, h6) {
-      margin: 0.8em 0 0.4em 0;
-      font-weight: 600;
-      line-height: 1.3;
-    }
-
-    .content h1 { font-size: 1.6em; }
-    .content h2 { font-size: 1.4em; }
-    .content h3 { font-size: 1.2em; }
-
-    .content p {
-      margin: 0.6em 0;
-    }
-
-    .content code {
-      background: rgba(0, 0, 0, 0.3);
-      padding: 3px 6px;
-      border-radius: 4px;
-      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
-      font-size: 0.9em;
-    }
-
-    .message.user .content code {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .content pre {
-      background: rgba(0, 0, 0, 0.4);
-      padding: 16px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin: 1em 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .message.user .content pre {
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-    .content pre code {
-      background: none;
-      padding: 0;
-    }
-
-    .content ul, .content ol {
-      margin: 0.6em 0;
-      padding-left: 1.5em;
-    }
-
-    .content li {
-      margin: 0.3em 0;
-    }
-
-    .content blockquote {
-      border-left: 3px solid rgba(255, 255, 255, 0.3);
-      margin: 0.6em 0;
-      padding-left: 1em;
-      font-style: italic;
-      opacity: 0.9;
-    }
-
-    .content a {
-      color: #8ab4f8;
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s;
-    }
-
-    .content a:hover {
-      border-bottom-color: #8ab4f8;
-    }
-
-    .message.user .content a {
-      color: #e3f2fd;
     }
 
     .input-container {
@@ -346,21 +225,6 @@ export class ChatInterface extends LitElement {
     }
   }
 
-  private renderMarkdown(content: string): string {
-    return marked.parse(content) as string;
-  }
-
-  private renderMessage(message: Message): TemplateResult {
-    return html`
-      <div class="message ${message.role}">
-        <div class="role">${message.role}</div>
-        <div class="content">
-          ${unsafeHTML(this.renderMarkdown(message.content))}
-        </div>
-      </div>
-    `;
-  }
-
   render() {
     return html`
       <div class="messages-container">
@@ -371,7 +235,9 @@ export class ChatInterface extends LitElement {
               <div>Start a conversation...</div>
             </div>
           `
-      : this.chatState.messages.map(msg => this.renderMessage(msg))
+      : this.chatState.messages.map(msg => {
+        return html`<chat-message .message=${msg}></chat-message>`
+      })
     }
         ${this.loading ? html`<div class="loading">Thinking...</div>` : ''}
       </div>
