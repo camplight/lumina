@@ -29,6 +29,7 @@ export class ChatInterface extends LitElement {
       padding: 12px;
       border-radius: 8px;
       max-width: 80%;
+      text-align: left;
     }
 
     .message.user {
