@@ -51,7 +51,7 @@ describe('ChatInterface Acceptance Tests', () => {
     });
 
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${mockService}></chat>
+      <chat-interface .service=${mockService}></chat-interface >
     `);
 
     // When the user types a message and sends it
@@ -92,7 +92,7 @@ describe('ChatInterface Acceptance Tests', () => {
     mockService.setMockError(new Error('API connection failed'));
 
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${mockService}></chat>
+      <chat-interface .service=${mockService}></chat-interface >
     `);
 
     // When the user tries to send a message
@@ -117,7 +117,7 @@ describe('ChatInterface Acceptance Tests', () => {
   it('should not send empty messages', async () => {
     // Given a chat interface
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${mockService}></chat>
+      <chat-interface .service=${mockService}></chat-interface >
     `);
 
     // When the user tries to send an empty message
@@ -136,7 +136,7 @@ describe('ChatInterface Acceptance Tests', () => {
   it('should handle multiple message exchanges', async () => {
     // Given a chat interface
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${mockService}></chat>
+      <chat-interface .service=${mockService}></chat-interface >
     `);
 
     const input = el.shadowRoot!.querySelector('input') as HTMLInputElement;
@@ -198,7 +198,7 @@ describe('ChatInterface Acceptance Tests', () => {
     };
 
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${slowService}></chat>
+      <chat-interface .service=${slowService}></chat-interface >
     `);
 
     // When the user sends a message
@@ -245,7 +245,7 @@ describe('ChatInterface Acceptance Tests', () => {
     mockService.setMockResponse({ messages: [] });
 
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${mockService}></chat>
+      <chat-interface .service=${mockService}></chat-interface >
     `);
 
     // Then it should show an empty state message
@@ -264,7 +264,7 @@ describe('ChatInterface Acceptance Tests', () => {
     });
 
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${mockService}></chat>
+      <chat-interface .service=${mockService}></chat-interface >
     `);
 
     await el.updateComplete;
@@ -293,7 +293,7 @@ describe('ChatInterface Acceptance Tests', () => {
     };
 
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${spyService}></chat>
+      <chat-interface .service=${spyService}></chat-interface >
     `);
 
     const input = el.shadowRoot!.querySelector('input') as HTMLInputElement;
@@ -333,7 +333,7 @@ describe('ChatInterface Acceptance Tests', () => {
     };
 
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${spyService}></chat>
+      <chat-interface .service=${spyService}></chat-interface >
     `);
 
     const input = el.shadowRoot!.querySelector('input') as HTMLInputElement;
@@ -363,7 +363,7 @@ describe('ChatInterface Acceptance Tests', () => {
   it('should show error when service is not provided', async () => {
     // Given a chat interface without a service
     const el = await fixture<ChatInterface>(html`
-      <chat></chat>
+      <chat-interface></chat-interface >
     `);
 
     await el.updateComplete;
@@ -383,7 +383,7 @@ describe('ChatInterface Acceptance Tests', () => {
     });
 
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${mockService}></chat>
+      <chat-interface .service=${mockService}></chat-interface >
     `);
 
     await el.updateComplete;
@@ -410,7 +410,7 @@ describe('ChatInterface Acceptance Tests', () => {
     });
 
     const el = await fixture<ChatInterface>(html`
-      <chat .service=${mockService}></chat>
+      <chat-interface .service=${mockService}></chat-interface >
     `);
 
     await el.updateComplete;
