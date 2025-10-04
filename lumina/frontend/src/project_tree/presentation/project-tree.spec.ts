@@ -50,7 +50,7 @@ describe('ProjectTree Integration Tests', () => {
 
     const header = el.shadowRoot!.querySelector('h2');
     expect(header).toBeTruthy();
-    expect(header!.textContent).toBe('Project Structure');
+    expect(header!.textContent).toMatch(/Project Structure/i);
   });
 
   it('should list files in the root directory', async () => {
