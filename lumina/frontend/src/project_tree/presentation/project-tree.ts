@@ -1,5 +1,3 @@
-// frontend/src/components/project-tree.ts
-
 import {LitElement, html, css, TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {getProjectTreeUseCase, ProjectTreeLister} from '../domain/project_tree_lister';
@@ -15,15 +13,20 @@ export class ProjectTree extends LitElement {
       width: 100%;
       height: 100%;
       box-sizing: border-box;
+      background-color: #1b2636;
+      color: #e0e0e0;
     }
 
     .loading {
-      color: #666;
+      color: #999;
     }
 
     .error {
-      color: #d32f2f;
+      color: #ef5350;
       margin-bottom: 8px;
+      background: rgba(239, 83, 80, 0.1);
+      padding: 12px;
+      border-radius: 4px;
     }
 
     button {
@@ -33,6 +36,7 @@ export class ProjectTree extends LitElement {
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-weight: 600;
     }
 
     button:hover {
@@ -41,35 +45,49 @@ export class ProjectTree extends LitElement {
 
     h2 {
       margin: 0 0 16px 0;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
     }
 
     .tree-node {
       user-select: none;
       cursor: pointer;
-      padding: 4px 8px;
+      padding: 6px 8px;
       display: flex;
       align-items: center;
+      border-radius: 4px;
+      transition: background-color 0.15s ease;
     }
 
     .tree-node:hover {
-      background: #f5f5f5;
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .icon {
-      margin-right: 4px;
-      color: #666;
+      margin-right: 6px;
+      color: #999;
+      font-size: 14px;
+      width: 16px;
+      display: inline-block;
+      text-align: center;
     }
 
     .name {
       font-weight: normal;
+      font-size: 14px;
+      color: #e0e0e0;
     }
 
     .name.directory {
       font-weight: 500;
+      color: #fff;
     }
 
     .children {
       margin-left: 16px;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      padding-left: 4px;
     }
   `;
 
