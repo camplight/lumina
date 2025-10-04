@@ -17,6 +17,6 @@ export declare class ChatInterface extends LitElement {
 }
 declare global {
     interface HTMLElementTagNameMap {
-        'chat-interface': ChatInterface;
+        'chat': ChatInterface;
     }
 }

@@ -10,7 +10,7 @@ marked.setOptions({
   gfm: true,
 });
 
-@customElement('chat-interface')
+@customElement('chat')
 export class ChatInterface extends LitElement {
   static styles = css`
     :host {
@@ -400,6 +400,6 @@ export class ChatInterface extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'chat-interface': ChatInterface;
+    'chat': ChatInterface;
   }
 }

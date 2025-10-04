@@ -4,7 +4,7 @@ import {getProjectTreeUseCase, ProjectTreeLister} from '../domain/project_tree_l
 import { Node } from '../domain/node';
 
 @customElement('project-tree')
-export class Project_tree extends LitElement {
+export class ProjectTree extends LitElement {
   static styles = css`
     :host {
       display: block;
@@ -207,6 +207,6 @@ export class Project_tree extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'project-tree': Project_tree;
+    'project-tree': ProjectTree;
   }
 }
