@@ -1,8 +1,8 @@
 import './style.css';
 import './chat/presentation/chat-interface';
 import './project_tree/presentation/project_tree';
-import { Wails_project_tree_lister } from './project_tree/infrastructure/wails_project_tree_lister';
-import { Wails_chat_service } from './chat/infrastructure/wails_chat_service';
+import { WailsProjectTreeLister } from './project_tree/infrastructure/wails_project_tree_lister';
+import { WailsChatService } from './chat/infrastructure/wails_chat_service';
 
 // Add global styles for the layout
 const style = document.createElement('style');
@@ -41,12 +41,12 @@ window.addEventListener('DOMContentLoaded', () => {
   rightPanel.style.backgroundColor = '#fafafa';
 
   // Create and configure chat interface
-  const chatService = new Wails_chat_service();
+  const chatService = new WailsChatService();
   const chatInterface = document.createElement('chat-interface') as any;
   chatInterface.service = chatService;
 
   // Create and configure project tree
-  const treeLister = new Wails_project_tree_lister();
+  const treeLister = new WailsProjectTreeLister();
   const projectTree = document.createElement('project-tree') as any;
   projectTree.lister = treeLister;
 
