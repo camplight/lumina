@@ -76,11 +76,12 @@ describe('ChatInterface Acceptance Tests', () => {
 
     const userMessage = messages[0];
     expect(userMessage.querySelector('.role')?.textContent).toContain('user');
-    expect(userMessage.querySelector('.content')?.textContent).toBe('Hello AI');
+    // Check for the content text (ignoring HTML markup)
+    expect(userMessage.querySelector('.content')?.textContent?.trim()).toBe('Hello AI');
 
     const assistantMessage = messages[1];
     expect(assistantMessage.querySelector('.role')?.textContent).toContain('assistant');
-    expect(assistantMessage.querySelector('.content')?.textContent).toBe('Hello! How can I help you?');
+    expect(assistantMessage.querySelector('.content')?.textContent?.trim()).toBe('Hello! How can I help you?');
 
     // And the input should be cleared
     expect(input.value).toBe('');
@@ -180,10 +181,10 @@ describe('ChatInterface Acceptance Tests', () => {
     const messages = el.shadowRoot!.querySelectorAll('.message');
     expect(messages.length).toBe(4);
 
-    expect(messages[0].querySelector('.content')?.textContent).toBe('First message');
-    expect(messages[1].querySelector('.content')?.textContent).toBe('First response');
-    expect(messages[2].querySelector('.content')?.textContent).toBe('Second message');
-    expect(messages[3].querySelector('.content')?.textContent).toBe('Second response');
+    expect(messages[0].querySelector('.content')?.textContent?.trim()).toBe('First message');
+    expect(messages[1].querySelector('.content')?.textContent?.trim()).toBe('First response');
+    expect(messages[2].querySelector('.content')?.textContent?.trim()).toBe('Second message');
+    expect(messages[3].querySelector('.content')?.textContent?.trim()).toBe('Second response');
   });
 
   it('should show loading state while waiting for response', async () => {
@@ -371,5 +372,53 @@ describe('ChatInterface Acceptance Tests', () => {
     const error = el.shadowRoot!.querySelector('.error');
     expect(error).toBeTruthy();
     expect(error!.textContent).toContain('No chat service provided');
+  });
+
+  it('should render markdown content correctly', async () => {
+    // Given a chat interface with markdown content
+    mockService.setMockResponse({
+      messages: [
+        { role: 'assistant', content: '# Heading\n\nThis is **bold** and *italic*.' }
+      ]
+    });
+
+    const el = await fixture<ChatInterface>(html`
+      <chat-interface .service=${mockService}></chat-interface>
+    `);
+
+    await el.updateComplete;
+
+    // Then the markdown should be rendered as HTML
+    const content = el.shadowRoot!.querySelector('.content');
+    expect(content).toBeTruthy();
+
+    // Check for heading
+    expect(content!.querySelector('h1')).toBeTruthy();
+    expect(content!.querySelector('h1')?.textContent?.trim()).toBe('Heading');
+
+    // Check for bold and italic
+    expect(content!.querySelector('strong')).toBeTruthy();
+    expect(content!.querySelector('em')).toBeTruthy();
+  });
+
+  it('should render code blocks in markdown', async () => {
+    // Given a chat interface with code block content
+    mockService.setMockResponse({
+      messages: [
+        { role: 'assistant', content: '```javascript\nconst x = 42;\n```' }
+      ]
+    });
+
+    const el = await fixture<ChatInterface>(html`
+      <chat-interface .service=${mockService}></chat-interface>
+    `);
+
+    await el.updateComplete;
+
+    // Then code blocks should be rendered
+    const content = el.shadowRoot!.querySelector('.content');
+    expect(content).toBeTruthy();
+    expect(content!.querySelector('pre')).toBeTruthy();
+    expect(content!.querySelector('code')).toBeTruthy();
   });
 });
