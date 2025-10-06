@@ -1,6 +1,6 @@
 # Lumina
 
-An AI-first [moldable development](https://moldabledevelopment.com/) environment.
+A [moldable development](https://moldabledevelopment.com/) environment. Deeply inspired by https://gtoolkit.com/.
 
 ## Guiding Principles
 
