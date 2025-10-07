@@ -54,3 +54,9 @@ export class MainApp extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'main-app': MainApp;
+  }
+}
