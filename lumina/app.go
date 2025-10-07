@@ -13,13 +13,16 @@ import (
 	chatinfra "lumina/backend/chat/infrastructure"
 	treedomain "lumina/backend/projecttree/domain"
 	treeinfra "lumina/backend/projecttree/infrastructure"
+	typescriptdomain "lumina/backend/typescript_execution/domain"
+	typescriptinfra "lumina/backend/typescript_execution/infrastructure"
 )
 
 // App struct
 type App struct {
-	ctx         context.Context
-	chat        *chatdomain.Chat
-	persistence *chatinfra.SQLitePersistence
+	ctx                   context.Context
+	chat                  *chatdomain.Chat
+	persistence           *chatinfra.SQLitePersistence
+	typescriptExecutor    typescriptdomain.TypeScriptExecutor
 }
 
 // NewApp creates a new App application struct
@@ -60,9 +63,13 @@ func NewApp() *App {
 	// Create chat instance with repomix integration and persistence
 	chat := chatdomain.NewChat(openAIService, repomixService, persistence)
 
+	// Create TypeScript executor
+	typescriptExecutor := typescriptinfra.NewNodeTypeScriptExecutor()
+
 	return &App{
-		chat:        chat,
-		persistence: persistence,
+		chat:               chat,
+		persistence:        persistence,
+		typescriptExecutor: typescriptExecutor,
 	}
 }
 
@@ -114,4 +121,13 @@ func (a *App) SendChatMessage(message string) (chatdomain.ChatState, error) {
 // GetChatState returns the current chat state
 func (a *App) GetChatState() chatdomain.ChatState {
 	return a.chat.GetState()
+}
+
+// ExecuteTypeScript executes TypeScript code and returns the result
+func (a *App) ExecuteTypeScript(code string) (typescriptdomain.ExecutionResult, error) {
+	result, err := a.typescriptExecutor.Execute(code)
+	if err != nil {
+		return typescriptdomain.ExecutionResult{}, err
+	}
+	return *result, nil
 }

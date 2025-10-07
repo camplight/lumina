@@ -44,6 +44,24 @@ export namespace domain {
 		    return a;
 		}
 	}
+	export class ExecutionResult {
+	    output: string;
+	    error: string;
+	    success: boolean;
+	    exitCode: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ExecutionResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.output = source["output"];
+	        this.error = source["error"];
+	        this.success = source["success"];
+	        this.exitCode = source["exitCode"];
+	    }
+	}
 	
 	export class Node {
 	    name: string;

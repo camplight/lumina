@@ -11,6 +11,14 @@ export declare namespace domain {
         constructor(source?: any);
         convertValues(a: any, classs: any, asMap?: boolean): any;
     }
+    class ExecutionResult {
+        output: string;
+        error: string;
+        success: boolean;
+        exitCode: number;
+        static createFrom(source?: any): ExecutionResult;
+        constructor(source?: any);
+    }
     class Node {
         name: string;
         type: string;
