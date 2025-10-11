@@ -1,7 +1,8 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import {fixture, html} from '@open-wc/testing-helpers';
 import {ToolSaver} from './tool-saver';
-import {ToolService} from '../domain/tool_service';
+import {Tool, ToolService} from '../domain/tool_service';
+import {error} from 'happy-dom/lib/PropertySymbol';
 
 // Mock Tool Service implementation for testing
 class MockToolService implements ToolService {
@@ -23,6 +24,14 @@ class MockToolService implements ToolService {
       throw this.mockError;
     }
     return this.mockResponse;
+  }
+
+  getTool(id: string): Promise<Tool> {
+    return Promise.resolve(undefined);
+  }
+
+  listTools(): Promise<Tool[]> {
+    return Promise.resolve([]);
   }
 }
 

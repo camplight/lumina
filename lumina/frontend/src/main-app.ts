@@ -3,6 +3,7 @@ import {html, LitElement} from 'lit';
 import './code_editor/presentation/code-editor';
 import './code_editor/presentation/execution-result';
 import './tool/presentation/tool-saver';
+import './tool/presentation/tool-search';
 import {ExecutionResult, WailsTypeScriptExecutor} from './code_editor/infrastructure/wails_typescript_executor';
 import {WailsToolService} from './tool/infrastructure/wails_tool_service';
 
@@ -101,6 +102,9 @@ export class MainApp extends LitElement {
   @state()
   private executionResult: ExecutionResult | null = null;
 
+  @state()
+  private selectedToolName = '';
+
   private executor = new WailsTypeScriptExecutor();
   private toolService = new WailsToolService();
 
@@ -108,6 +112,10 @@ export class MainApp extends LitElement {
     return html`
       <div class="container">
         <div class="leftPanel">
+          <tool-search
+            .toolService=${this.toolService}
+            @tool-selected=${this.handleToolSelected}
+          ></tool-search>
           <div class="editorHeader">TypeScript Editor</div>
           <code-editor
             .code=${this.currentCode}
@@ -116,6 +124,7 @@ export class MainApp extends LitElement {
           <tool-saver
             .code=${this.currentCode}
             .toolService=${this.toolService}
+            .initialToolName=${this.selectedToolName}
             @tool-saved=${this.handleToolSaved}
           ></tool-saver>
         </div>
@@ -138,6 +147,12 @@ export class MainApp extends LitElement {
 
   private handleCodeChange(event: CustomEvent) {
     this.currentCode = event.detail.code;
+  }
+
+  private handleToolSelected(event: CustomEvent) {
+    const tool = event.detail.tool;
+    this.currentCode = tool.code;
+    this.selectedToolName = tool.name;
   }
 
   private handleToolSaved(event: CustomEvent) {

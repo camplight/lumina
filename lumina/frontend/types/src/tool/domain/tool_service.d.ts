@@ -7,4 +7,6 @@ export interface Tool {
 }
 export interface ToolService {
     saveTool(name: string, code: string): Promise<Tool>;
+    listTools(): Promise<Tool[]>;
+    getTool(id: string): Promise<Tool>;
 }

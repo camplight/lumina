@@ -100,6 +100,17 @@ export class ToolSaver extends LitElement {
   @property({type: Object})
   toolService?: ToolService;
 
+  @property({type: String})
+  initialToolName = '';
+
+  protected update(changedProperties: Map<string, any>) {
+    if (changedProperties.has('initialToolName')) {
+      this.toolName = this.initialToolName;
+      this.saveMessage = '';
+    }
+    super.update(changedProperties);
+  }
+
   private handleNameChange(event: Event) {
     const target = event.target as HTMLInputElement;
     this.toolName = target.value;

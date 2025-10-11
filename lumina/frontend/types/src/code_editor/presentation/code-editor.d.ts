@@ -6,6 +6,7 @@ export declare class CodeEditor extends LitElement {
     firstUpdated(): Promise<void>;
     disconnectedCallback(): void;
     private initializeEditor;
+    protected update(changedProperties: Map<string, any>): void;
     render(): import("lit-html").TemplateResult<1>;
 }
 declare global {

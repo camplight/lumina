@@ -94,6 +94,21 @@ export class CodeEditor extends LitElement {
     });
   }
 
+  protected update(changedProperties: Map<string, any>) {
+    // Check if the code property has changed and editor is initialized
+    if (changedProperties.has('code') && this.editor) {
+      const currentEditorValue = this.editor.getValue();
+
+      // Only update if the code is actually different to avoid infinite loops
+      // and to preserve user cursor position during typing
+      if (currentEditorValue !== this.code) {
+        this.editor.setValue(this.code);
+      }
+    }
+
+    super.update(changedProperties);
+  }
+
   render() {
     return html`
       <div class="editorContainer">

@@ -7,6 +7,8 @@ export declare class ToolSaver extends LitElement {
     private saveMessage;
     code: string;
     toolService?: ToolService;
+    initialToolName: string;
+    protected update(changedProperties: Map<string, any>): void;
     private handleNameChange;
     private handleSave;
     private handleKeyPress;
