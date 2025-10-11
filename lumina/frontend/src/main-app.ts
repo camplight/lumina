@@ -2,7 +2,9 @@ import {customElement, state} from 'lit/decorators.js';
 import {html, LitElement} from 'lit';
 import './code_editor/presentation/code-editor';
 import './code_editor/presentation/execution-result';
+import './tool/presentation/tool-saver';
 import {ExecutionResult, WailsTypeScriptExecutor} from './code_editor/infrastructure/wails_typescript_executor';
+import {WailsToolService} from './tool/infrastructure/wails_tool_service';
 
 @customElement('main-app')
 export class MainApp extends LitElement {
@@ -100,6 +102,7 @@ export class MainApp extends LitElement {
   private executionResult: ExecutionResult | null = null;
 
   private executor = new WailsTypeScriptExecutor();
+  private toolService = new WailsToolService();
 
   render() {
     return html`
@@ -110,6 +113,11 @@ export class MainApp extends LitElement {
             .code=${this.currentCode}
             @code-change=${this.handleCodeChange}
           ></code-editor>
+          <tool-saver
+            .code=${this.currentCode}
+            .toolService=${this.toolService}
+            @tool-saved=${this.handleToolSaved}
+          ></tool-saver>
         </div>
         <div class="rightPanel">
           <button
@@ -130,6 +138,10 @@ export class MainApp extends LitElement {
 
   private handleCodeChange(event: CustomEvent) {
     this.currentCode = event.detail.code;
+  }
+
+  private handleToolSaved(event: CustomEvent) {
+    console.log('Tool saved:', event.detail.tool);
   }
 
   private async executeCode() {

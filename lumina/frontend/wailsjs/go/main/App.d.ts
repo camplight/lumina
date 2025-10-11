@@ -8,6 +8,14 @@ export function GetChatState():Promise<domain.ChatState>;
 
 export function GetCurrentProjectTree():Promise<domain.Node>;
 
+export function GetTool(arg1:string):Promise<domain.Tool>;
+
+export function GetToolByName(arg1:string):Promise<domain.Tool>;
+
 export function Greet(arg1:string):Promise<string>;
+
+export function ListTools():Promise<Array<domain.Tool>>;
+
+export function SaveTool(arg1:string,arg2:string):Promise<domain.Tool>;
 
 export function SendChatMessage(arg1:string):Promise<domain.ChatState>;

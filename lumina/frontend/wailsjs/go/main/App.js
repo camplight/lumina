@@ -14,8 +14,24 @@ export function GetCurrentProjectTree() {
   return window['go']['main']['App']['GetCurrentProjectTree']();
 }
 
+export function GetTool(arg1) {
+  return window['go']['main']['App']['GetTool'](arg1);
+}
+
+export function GetToolByName(arg1) {
+  return window['go']['main']['App']['GetToolByName'](arg1);
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
+}
+
+export function ListTools() {
+  return window['go']['main']['App']['ListTools']();
+}
+
+export function SaveTool(arg1, arg2) {
+  return window['go']['main']['App']['SaveTool'](arg1, arg2);
 }
 
 export function SendChatMessage(arg1) {

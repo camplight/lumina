@@ -27,4 +27,14 @@ export declare namespace domain {
         constructor(source?: any);
         convertValues(a: any, classs: any, asMap?: boolean): any;
     }
+    class Tool {
+        id: string;
+        name: string;
+        code: string;
+        created_at: any;
+        updated_at: any;
+        static createFrom(source?: any): Tool;
+        constructor(source?: any);
+        convertValues(a: any, classs: any, asMap?: boolean): any;
+    }
 }

@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-export interface ExecutionResult {
+export interface Result {
     output: string;
     error: string;
     success: boolean;
@@ -7,13 +7,10 @@ export interface ExecutionResult {
 }
 export declare class ExecutionResult extends LitElement {
     static styles: import("lit").CSSResult;
-    result: ExecutionResult | null;
+    result: Result | null;
     loading: boolean;
     render(): import("lit-html").TemplateResult<1>;
     private renderContent;
-    setResult(result: ExecutionResult | null): void;
-    setLoading(loading: boolean): void;
-    clear(): void;
 }
 declare global {
     interface HTMLElementTagNameMap {
