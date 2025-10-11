@@ -1,3 +1,5 @@
 .idea
 repomix-output.xml
 .env
+.swarm
+lumina/.claude-flow

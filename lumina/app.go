@@ -13,6 +13,8 @@ import (
 	chatinfra "lumina/backend/chat/infrastructure"
 	treedomain "lumina/backend/projecttree/domain"
 	treeinfra "lumina/backend/projecttree/infrastructure"
+	tooldomain "lumina/backend/tool/domain"
+	toolinfra "lumina/backend/tool/infrastructure"
 	typescriptdomain "lumina/backend/typescript_execution/domain"
 	typescriptinfra "lumina/backend/typescript_execution/infrastructure"
 )
@@ -22,6 +24,7 @@ type App struct {
 	ctx                   context.Context
 	chat                  *chatdomain.Chat
 	persistence           *chatinfra.SQLitePersistence
+	toolRepository        tooldomain.ToolRepository
 	typescriptExecutor    typescriptdomain.TypeScriptExecutor
 }
 
@@ -60,6 +63,21 @@ func NewApp() *App {
 		log.Printf("Chat persistence initialized at: %s", dbPath)
 	}
 
+	// Create tool repository using the same database
+	var toolRepository tooldomain.ToolRepository
+	if persistence != nil {
+		toolRepo, err := toolinfra.NewSQLiteToolRepository(dbPath)
+		if err != nil {
+			log.Printf("Warning: Could not initialize tool repository: %v", err)
+			toolRepository = nil
+		} else {
+			toolRepository = toolRepo
+			log.Printf("Tool repository initialized at: %s", dbPath)
+		}
+	} else {
+		toolRepository = nil
+	}
+
 	// Create chat instance with repomix integration and persistence
 	chat := chatdomain.NewChat(openAIService, repomixService, persistence)
 
@@ -67,8 +85,9 @@ func NewApp() *App {
 	typescriptExecutor := typescriptinfra.NewNodeTypeScriptExecutor()
 
 	return &App{
-		chat:               chat,
-		persistence:        persistence,
+		chat:            chat,
+		persistence:     persistence,
+		toolRepository:  toolRepository,
 		typescriptExecutor: typescriptExecutor,
 	}
 }
@@ -101,6 +120,12 @@ func (a *App) shutdown(ctx context.Context) {
 			log.Printf("Warning: Failed to close persistence: %v", err)
 		}
 	}
+
+	if a.toolRepository != nil {
+		if err := a.toolRepository.Close(); err != nil {
+			log.Printf("Warning: Failed to close tool repository: %v", err)
+		}
+	}
 }
 
 // Greet returns a greeting for the given name
@@ -130,4 +155,52 @@ func (a *App) ExecuteTypeScript(code string) (typescriptdomain.ExecutionResult, 
 		return typescriptdomain.ExecutionResult{}, err
 	}
 	return *result, nil
+}
+
+// SaveTool saves a tool with the given name and code
+func (a *App) SaveTool(name, code string) (tooldomain.Tool, error) {
+	if a.toolRepository == nil {
+		return tooldomain.Tool{}, fmt.Errorf("tool repository not available")
+	}
+
+	// Validate and create the tool
+	tool, err := tooldomain.NewToolWithValidation(name, code)
+	if err != nil {
+		return tooldomain.Tool{}, fmt.Errorf("validation failed: %w", err)
+	}
+
+	// Save to repository
+	err = a.toolRepository.Save(*tool)
+	if err != nil {
+		return tooldomain.Tool{}, fmt.Errorf("failed to save tool: %w", err)
+	}
+
+	return *tool, nil
+}
+
+// GetTool retrieves a tool by ID
+func (a *App) GetTool(id string) (tooldomain.Tool, error) {
+	if a.toolRepository == nil {
+		return tooldomain.Tool{}, fmt.Errorf("tool repository not available")
+	}
+
+	return a.toolRepository.GetByID(id)
+}
+
+// GetToolByName retrieves a tool by name
+func (a *App) GetToolByName(name string) (tooldomain.Tool, error) {
+	if a.toolRepository == nil {
+		return tooldomain.Tool{}, fmt.Errorf("tool repository not available")
+	}
+
+	return a.toolRepository.GetByName(name)
+}
+
+// ListTools returns all saved tools
+func (a *App) ListTools() ([]tooldomain.Tool, error) {
+	if a.toolRepository == nil {
+		return nil, fmt.Errorf("tool repository not available")
+	}
+
+	return a.toolRepository.List()
 }
